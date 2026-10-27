@@ -15,6 +15,8 @@ const botonBajar = document.querySelector("#bajar-servidor");
 let misiones = [];
 
 
+
+
 formulario.addEventListener("submit", (evento) => {
   evento.preventDefault(); // Evita que el formulario recargue la página.
   agregarMision();
@@ -25,6 +27,35 @@ botonBorrar.addEventListener("click", borrarTodo);
 function agregarMision() {
   // TODO
   // crear objeto misión, incluir los valores de los campos y un id único
+  const titulo = document.getElementById("titulo").value;
+  
+  const desc = document.getElementById("descripcion").value;
+  
+
+  const dificultad = document.getElementById("dificultad").value;
+  
+
+  const recompensa = document.getElementById("recompensa").value;
+ 
+  const mision = {
+    id: crypto.randomUUID(),
+    titulo: titulo,
+    descripcion: desc,
+    dificultad: dificultad,
+    recompensa: recompensa
+  };
+   const misionesGuardadas =
+    JSON.parse(localStorage.getItem("misiones")) || [];
+
+  // 4. Añadir la nueva misión al array
+  misionesGuardadas.push(mision);
+
+  // 5. Guardar el array actualizado
+  localStorage.setItem("misiones", JSON.stringify(misionesGuardadas));
+
+  // 6. Mostrar la nueva misión en la página
+  mostrarMision(mision);
+  
 }
 
 function mostrarMisiones() {
@@ -71,6 +102,44 @@ function cargarMisiones() {
 }
 
 function borrarTodo() {
+  const botonBorrar = document.getElementById("borrar-todo");
+  botonBorrar.addEventListener('click', borrar);
+
+
+  function borrar(){
+    const misionesGuardadas =
+    JSON.parse(localStorage.getItem("misiones")) || [];
+    misionesGuardadas.forEach(m => {
+      misionesGuardadas.pop(m);
+    });
+    mostrarMisiones();
+  
+  
+    localStorage.clear('clear');
+  }
+
+}
+
+function bajarServidor(){
+  const baj = document.getElementById("bajar-servidor");
+  baj.addEventListener('click', bajar)
+
+  function bajar(){
+    fetch('https://damp-cadaver-76ggrpj4x42p5v5-5500.app.github.dev/public/').then (r => r.JSON).catch(err => console.error(err))
+  }
+}
+
+function subirServidor(){
+  const sub = document.getElementById("subir-servidor");
+  sub.addEventListener('click', subir)
+
+  function subir(){
+    fetch('https://damp-cadaver-76ggrpj4x42p5v5-5500.app.github.dev/public/', {
+method:'POST',
+headers: {'Content-Type': 'application/json',},
+body: JSON.stringify(JSON)
+}).then ()
+  }
 }
 
 cargarMisiones();
